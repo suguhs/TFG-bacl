@@ -10,7 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+{
+    if (!Schema::hasTable('usuarios')) {
         Schema::create('usuarios', function (Blueprint $table) {
             $table->id('id_usuario'); // clave primaria personalizada
             $table->string('nombre', 100);
@@ -18,12 +19,12 @@ return new class extends Migration
             $table->string('gmail', 150)->unique();
             $table->string('contraseña', 255);
             $table->string('telefono', 20)->nullable();
-            $table->enum('rol', ['guest', 'admin'])->default('guest'); // <-- Campo de rol
+            $table->enum('rol', ['guest', 'admin'])->default('guest');
             $table->timestamps();
         });
-        
-        
     }
+}
+
 
     /**
      * Reverse the migrations.

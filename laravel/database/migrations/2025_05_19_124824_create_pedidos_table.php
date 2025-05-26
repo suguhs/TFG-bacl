@@ -9,19 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+   public function up(): void
 {
-    Schema::create('pedidos', function (Blueprint $table) {
-        $table->id('id_pedido');
-        $table->unsignedBigInteger('id_usuario');
-        $table->text('direccion');
-        $table->decimal('subtotal', 8, 2);
-        $table->string('estado')->default('pendiente');
-        $table->timestamps();
+    if (!Schema::hasTable('pedidos')) {
+        Schema::create('pedidos', function (Blueprint $table) {
+            $table->id('id_pedido');
+            $table->unsignedBigInteger('id_usuario');
+            $table->text('direccion');
+            $table->decimal('subtotal', 8, 2);
+            $table->string('estado')->default('pendiente');
+            $table->timestamps();
 
-        $table->foreign('id_usuario')->references('id_usuario')->on('usuarios')->onDelete('cascade');
-    });
+            $table->foreign('id_usuario')->references('id_usuario')->on('usuarios')->onDelete('cascade');
+        });
+    }
 }
+
 
     /**
      * Reverse the migrations.

@@ -10,7 +10,8 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+{
+    if (!Schema::hasTable('personal_access_tokens')) {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('tokenable_type');
@@ -25,6 +26,8 @@ return new class extends Migration
             $table->index(['tokenable_type', 'tokenable_id']);
         });
     }
+}
+
 
     /**
      * Reverse the migrations.
