@@ -37,9 +37,27 @@ Route::get('/limpiar-migraciones', function () {
 });
 
 Route::get('/borrar-tablas', function () {
-    $tablas = ['usuarios', 'platos', 'reservas', 'detalle_reservas', 'pedidos', 'detalle_pedidos', 'comentarios', 'personal_access_tokens', 'migrations'];
+    // Desactivar restricciones de clave foránea temporalmente
+    DB::statement('SET session_replication_role = replica;');
+
+    $tablas = [
+        'detalle_pedidos',
+        'pedidos',
+        'detalle_reservas',
+        'reservas',
+        'comentarios',
+        'platos',
+        'usuarios',
+        'personal_access_tokens',
+        'migrations'
+    ];
+
     foreach ($tablas as $tabla) {
         Schema::dropIfExists($tabla);
     }
+
+    // Reactivar restricciones
+    DB::statement('SET session_replication_role = DEFAULT;');
+
     return 'Tablas eliminadas ✅';
 });
