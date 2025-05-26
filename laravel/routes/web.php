@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 Route::get('/migrar', function () {
     try {
@@ -33,4 +34,12 @@ Route::get('/limpiar-migraciones', function () {
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
+});
+
+Route::get('/borrar-tablas', function () {
+    $tablas = ['usuarios', 'platos', 'reservas', 'detalle_reservas', 'pedidos', 'detalle_pedidos', 'comentarios', 'personal_access_tokens', 'migrations'];
+    foreach ($tablas as $tabla) {
+        Schema::dropIfExists($tabla);
+    }
+    return 'Tablas eliminadas ✅';
 });
