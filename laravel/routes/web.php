@@ -1,6 +1,16 @@
 <?php
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/migrar', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return 'Migraciones ejecutadas ✅';
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
 Route::get('/debug-tablas', function () {
     try {
@@ -10,3 +20,4 @@ Route::get('/debug-tablas', function () {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
+
