@@ -21,3 +21,7 @@ Route::get('/debug-tablas', function () {
     }
 });
 
+Route::get('/fix-migracion', function () {
+    DB::table('migrations')->where('migration', 'like', '%add_imagen%')->delete();
+    return 'Migración eliminada de la tabla migrations ✅';
+});
