@@ -1,35 +1,35 @@
-# Usa PHP 8.2 con CLI (sin Apache, solo consola)
-FROM php:8.2-cli
+# Imagen base oficial de PHP con Apache
+FROM php:8.2-apache
 
-# Instala dependencias necesarias para Laravel y Composer
+# Activar mod_rewrite para Laravel
+RUN a2enmod rewrite
+
+# Instalar dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     curl \
-    libzip-dev \
-    zip \
     libpq-dev \
+    libzip-dev \
     libonig-dev \
-    libxml2-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    zip \
+    && docker-php-ext-install pdo pdo_pgsql zip bcmath
 
-# Instala Composer (gestor de paquetes de PHP)
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Crea directorio de trabajo donde vive tu proyecto
-WORKDIR /app
+# Copiar archivos de Laravel al contenedor
+COPY . /var/www/html
 
-# Copia todos los archivos al contenedor
-COPY . .
+# Establecer directorio de trabajo
+WORKDIR /var/www/html
 
-# Instala las dependencias del proyecto Laravel
+# Dar permisos necesarios (puedes ajustar si hace falta)
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage
+
+# Instalar dependencias PHP con Composer
 RUN composer install --no-interaction --optimize-autoloader
 
-# Genera la caché de configuración (evita errores de entorno en producción)
-RUN php artisan config:cache || true
-
-# Expone el puerto por donde Laravel servirá la app
-EXPOSE 8000
-
-# Comando que ejecuta Laravel en modo desarrollo
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Generar la clave de aplicación (evita errores en producción)
+RUN php artisan config:cache
