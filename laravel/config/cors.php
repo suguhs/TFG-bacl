@@ -2,11 +2,11 @@
 
 return [
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://tfg-front-mytg.vercel.app'],
+    'allowed_origins' => ['https://tfg-front-vbfb.vercel.app'],
 
     'allowed_origins_patterns' => [],
 
@@ -16,7 +16,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
 ];
-
