@@ -9,20 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
-{
-    if (!Schema::hasTable('comentarios')) {
+    public function up(): void
+    {
         Schema::create('comentarios', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('usuario_id');
-            $table->text('contenido');
-            $table->timestamps();
-
-            $table->foreign('usuario_id')->references('id_usuario')->on('usuarios')->onDelete('cascade');
+             $table->id();
+             $table->unsignedBigInteger('usuario_id');
+             $table->text('contenido');
+             $table->timestamps();
+             $table->foreign('usuario_id')->references('id_usuario')->on('usuarios')->onDelete('cascade');
         });
-    }
-}
 
+    }
 
     /**
      * Reverse the migrations.
