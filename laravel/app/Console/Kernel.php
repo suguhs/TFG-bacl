@@ -1,40 +1,27 @@
 <?php
 
-namespace App\Http;
+namespace App\Console;
 
-use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
-class Kernel extends HttpKernel
+class Kernel extends ConsoleKernel
 {
     /**
-     * Global HTTP middleware stack.
+     * Define the application's command schedule.
      */
-    protected $middleware = [
-        \Illuminate\Http\Middleware\HandleCors::class, // ✅ Middleware de CORS NATIVO para Laravel 10
-        \App\Http\Middleware\TrustProxies::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-    ];
+    protected function schedule(Schedule $schedule): void
+    {
+        // $schedule->command('inspire')->hourly();
+    }
 
     /**
-     * Route middleware groups.
+     * Register the commands for the application.
      */
-    protected $middlewareGroups = [
-        'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
+    protected function commands(): void
+    {
+        $this->load(__DIR__.'/Commands');
 
-        'api' => [
-            \Illuminate\Http\Middleware\HandleCors::class, // ✅ También aquí
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-    ];
+        require base_path('routes/console.php');
+    }
 }
