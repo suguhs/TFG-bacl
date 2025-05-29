@@ -1,0 +1,28 @@
+FROM php:8.2-fpm
+
+# Instala extensiones necesarias para Laravel
+RUN apt-get update && apt-get install -y \
+    git unzip curl libzip-dev zip \
+    && docker-php-ext-install zip pdo pdo_mysql
+
+# Instala Composer (gestor de dependencias PHP)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Establece el directorio de trabajo
+WORKDIR /var/www
+
+# Copia los archivos del proyecto
+COPY . .
+
+# Instala las dependencias de Laravel
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Da permisos a Laravel
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
+
+# Expone el puerto
+EXPOSE 9000
+
+# Comando por defecto (puedes cambiarlo según el entorno)
+CMD ["php-fpm"]
